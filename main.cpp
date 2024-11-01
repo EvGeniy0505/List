@@ -6,10 +6,19 @@ int main()
 {
     List list = C_tor();
 
-    Push_last_elem(&list, 3);
-    Push_last_elem(&list, 3);
-    Push_last_elem(&list, 3);
-    Push_last_elem(&list, 3);
+    Push_elem_after_num(&list, 2, 6);
+
+    dump(&list);
+
+    Push_elem_after_num(&list, 3, 2);
+
+    dump(&list);
+
+    Push_elem_after_num(&list, 4, 3);
+
+    dump(&list);
+
+    Push_elem_after_num(&list, 5, 1);
 
     dump(&list);
 

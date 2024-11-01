@@ -22,6 +22,7 @@ struct List
 enum Errors
 {
     ALL_OKEY,
+    CHANGE_FIRST_ELEM,
     NOT_OKEY,
 };
 
@@ -35,6 +36,11 @@ Errors verificator();
 
 Errors Push_last_elem(List* list, list_elem new_elem);
 
+void Change_first_elem_error(size_t num);
+
+Errors Pop_elem(List* list, size_t num);
+
+Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num);
 
 void dump(List* list);
 
