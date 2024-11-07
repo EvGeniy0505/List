@@ -118,53 +118,80 @@ Errors Pop_elem(List* list, size_t num)
 
 void dump(List* list)
 {
-    printf("-----------------LIST------------------\n");
+    FILE* f_dot = fopen("list.dot", "wr");
+
     for(size_t i = 0; i < list -> tail; i++)
     {
         if(list -> node[i].data == POIZON)
-            printf("    %d  ", 0);
+            fprintf(f_dot, "%d ", 0);
         else
-            printf("    %d  ", list -> node[i].data);
+            fprintf(f_dot, "node[%d ", list -> node[i].data);
     }
 
-    putchar('\n');
+    putc('\n', f_dot);
 
     for(size_t i = 0; i < list -> tail; i++)
     {
-        printf("    %d  ", list -> node[i].next);
+        fprintf(f_dot, "%d ", list -> node[i].next);
     }
 
-    putchar('\n');
+    putc('\n', f_dot);
 
     for(size_t i = 0; i < list -> tail; i++)
     {
         if(list -> node[i].prev < 0)
-            printf("   %d  ", list -> node[i].prev);
+            fprintf(f_dot, "%d ", list -> node[i].prev);
         else
-            printf("    %d  ", list -> node[i].prev);
+            fprintf(f_dot, "%d ", list -> node[i].prev);
     }
 
-    putchar('\n');
+    putc('\n', f_dot);
 
-    printf("head = %zu\ntail = %zu\nfree = %zu\n", list -> head, list -> tail, list -> free);
+    // printf("head = %zu\ntail = %zu\nfree = %zu\n", list -> head, list -> tail, list -> free);
 
-    printf("-----------------LIST------------------\n\n\n");
+    fclose(f_dot);
+}
+
+void dump_to_dot(List* list)
+{
+    FILE* f_dot = fopen("list.dot", "wr");
+
+    fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n");
+
+    fprintf(f_dot, "\tnode0 [shape=record, label=\" data=POIZON | next=%d | prev=%d \" ];\n", list -> node[0].next,
+                                                                                              list -> node[0].prev);
+    size_t i = 0;
+
+    while(list -> node[i].next != 0)
+    {
+        fprintf(f_dot, "\tnode%zu -> node%zu;\n", i, list -> node[i].next);
+
+        i = list -> node[i].next;
+
+        fprintf(f_dot, "\tnode%zu [shape=record, label=\" data=%d | next=%d | prev=%d \" ];\n", i, list -> node[i].data,
+                                                                                                   list -> node[i].next,
+                                                                                                   list -> node[i].prev);
+    }
+
+    fprintf(f_dot, "}");
+
+    fclose(f_dot);
 }
 
 int Adress_not_list_elem(size_t num, List* list)
 {
-    if(num < list -> size && list -> node[num].prev == -1)
+    if(list -> size < num && list -> node[num].prev != -1)
         printf("\n\nABOBUS ERROR YOU HAVE NOT %d ELEMENT!!!\n\n\n", num);
-        return 1;
-    return 0;
+        return 0;
+    return 1;
 }
 
 int Pop_null_elem(size_t num)
 {
     if(num == 0)
         printf("\n\nABOBUS ERROR DO NOT TOUCH NULL ELEMENT!!!\n\n\n");
-        return 1;
-    return 0;
+        return 0;
+    return 1;
 }
 
 void D_tor(List* list)

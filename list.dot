@@ -1,0 +1,14 @@
+digraph LIST {
+	rankdir=LR;
+	node0 [shape=record, label=" data=POIZON | next=1 | prev=5 " ];
+	node0 -> node1;
+	node1 [shape=record, label=" data=1 | next=2 | prev=0 " ];
+	node1 -> node2;
+	node2 [shape=record, label=" data=2 | next=6 | prev=1 " ];
+	node2 -> node6;
+	node6 [shape=record, label=" data=52 | next=4 | prev=2 " ];
+	node6 -> node4;
+	node4 [shape=record, label=" data=4 | next=5 | prev=6 " ];
+	node4 -> node5;
+	node5 [shape=record, label=" data=5 | next=0 | prev=4 " ];
+}

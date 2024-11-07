@@ -11,11 +11,11 @@ int main()
         Push_elem_after_num(&list, i + 1, i);
     }
 
-    dump(&list);
-
     Push_elem_after_num(&list, 52, 3);
 
-    dump(&list);
+    Pop_elem(&list, 3);
+
+    dump_to_dot(&list);
 
     D_tor(&list);
 

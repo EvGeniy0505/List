@@ -44,6 +44,8 @@ int Pop_null_elem(size_t num);
 
 Errors Pop_elem(List* list, size_t num);
 
+void dump_to_dot(List* list);
+
 Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num);
 
 Errors Push_elem_before_num(List* list, list_elem new_elem, size_t num);
