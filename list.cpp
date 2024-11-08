@@ -206,9 +206,9 @@ void dump(List* list)
     printf("-----------------LIST------------------\n\n\n");
 }
 
-void dump_to_dot(List* list)
+void dump_to_dot(List* list, int num_graph)
 {
-    FILE* f_dot = fopen("output/list.dot", "w");
+    FILE* f_dot = fopen("output/list.dot", "a");
 
     assert(f_dot);
     assert(list);
@@ -216,7 +216,7 @@ void dump_to_dot(List* list)
         fprintf(stderr, "FILE OPEN ERROR!!!\n");
 
 
-    fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n");
+    fprintf(f_dot, "digraph LIST%d {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n", num_graph);
 
     fprintf(f_dot, "\tnode0 [shape=record, color=red,"
                    "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
@@ -263,10 +263,17 @@ void dump_to_dot(List* list)
 
     fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
 
-    fprintf(f_dot, "}");
+    fprintf(f_dot, "}\n\n");
 
     fclose(f_dot);
+
 }
+
+// void Dot_file_compile()
+// {
+//     const char* com[50] = "dot -Tpng output/list.dot > output/list.png";
+//      system
+// }
 
 int Adress_not_list_elem(size_t num, List* list)
 {

@@ -11,10 +11,6 @@ main.o: main.cpp
 list.o: list.cpp
 	@g++ -c list.cpp $(flags)
 
-run:
-	./list
-	dot -Tpng output/list.dot > output/list.png
-
 clean:
 	rm *.o list *.d log_file.txt
 

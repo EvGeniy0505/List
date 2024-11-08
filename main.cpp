@@ -13,19 +13,19 @@ int main()
 
     Insert_elem_after_num(&list, 52, 3);
 
-    // dump_to_dot(&list);
+    dump_to_dot(&list, 1);
 
     Pop_elem(&list, 3);
 
-    // dump_to_dot(&list);
+    dump_to_dot(&list, 2);
 
     Insert_elem_before_num(&list, 10, 2);
 
-    // dump_to_dot(&list);
+    dump_to_dot(&list, 3);
 
     Insert_first_elem(&list, 3);
 
-    dump_to_dot(&list);
+    dump_to_dot(&list, 4);
 
     Search_elem_by_val(&list, 52);
 

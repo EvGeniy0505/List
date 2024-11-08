@@ -43,7 +43,7 @@ int Pop_null_elem(size_t num);
 
 Errors Pop_elem(List* list, size_t num);
 
-void dump_to_dot(List* list);
+void dump_to_dot(List* list, int num_graph);
 
 void Search_elem_by_val(List* list, list_elem val);
 
