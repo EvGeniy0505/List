@@ -55,6 +55,8 @@ int* Ptr_on_last_elem(List* list);
 
 int* Ptr_on_first_elem(List* list);
 
+void Dot_file_compile(int num_pucture);
+
 Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num);
 
 Errors Insert_elem_before_num(List* list, list_elem new_elem, size_t num);

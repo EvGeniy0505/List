@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 #include "list.h"
 
@@ -208,7 +209,7 @@ void dump(List* list)
 
 void dump_to_dot(List* list, int num_graph)
 {
-    FILE* f_dot = fopen("output/list.dot", "a");
+    FILE* f_dot = fopen("output/list.dot", "w");
 
     assert(f_dot);
     assert(list);
@@ -218,29 +219,12 @@ void dump_to_dot(List* list, int num_graph)
 
     fprintf(f_dot, "digraph LIST%d {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n", num_graph);
 
-    fprintf(f_dot, "\tnode0 [shape=record, color=red,"
-                   "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
-                   list -> node[0].next, list -> node[0].prev);
-
-    size_t i = 0;
-
-    while(list -> node[i].next != 0)
-    {
-        fprintf(f_dot, "\tnode%zu -> node%d;\n", i, list -> node[i].next);
-
-        i = list -> node[i].next;
-
-        fprintf(f_dot, "\tnode%zu [shape=record, color=blue,"
-                       "label=\" index=%zu | data=%d | next=%d | prev=%d \" ];\n",
-                       i, i, list -> node[i].data, list -> node[i].next, list -> node[i].prev);
-    }
-
-    fprintf(f_dot, "\tnode%zu -> node0;\n", i);
+    fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
 
     fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n"
                    "\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
 
-    for(i = 0; i < list -> size; i++)
+    for(size_t i = 0; i < list -> size; i++)
     {
         if(list -> node[i].prev == -1 && list -> node[i].next == 0)
         {
@@ -261,19 +245,46 @@ void dump_to_dot(List* list, int num_graph)
 
     fprintf(f_dot, "\t\tlabel = \"Empty fields\";\n\t}\n");
 
-    fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
+
+    fprintf(f_dot, "\tnode0 [shape=record, color=red,"
+                   "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
+                   list -> node[0].next, list -> node[0].prev);
+
+    size_t i = 0;
+
+    while(list -> node[i].next != 0)
+    {
+        fprintf(f_dot, "\tnode%zu -> node%d;\n", i, list -> node[i].next);
+
+        i = list -> node[i].next;
+
+        fprintf(f_dot, "\tnode%zu [shape=record, color=blue,"
+                       "label=\" index=%zu | data=%d | next=%d | prev=%d \" ];\n",
+                       i, i, list -> node[i].data, list -> node[i].next, list -> node[i].prev);
+    }
+
+    fprintf(f_dot, "\tnode%zu -> node0;\n", i);
 
     fprintf(f_dot, "}\n\n");
 
     fclose(f_dot);
 
+    Dot_file_compile(num_graph);
 }
 
-// void Dot_file_compile()
-// {
-//     const char* com[50] = "dot -Tpng output/list.dot > output/list.png";
-//      system
-// }
+void Dot_file_compile(int num_pucture)
+{
+    char com1[100] = "dot -Tpng output/list.dot > output/list";
+    char com2[5]  = ".png";
+
+    char num_str[3] = "";
+
+    snprintf(num_str, sizeof(num_str), "%d", num_pucture);
+
+    snprintf(com1, sizeof(com1), "%s%s%s", com1, num_str, com2);
+
+    system(com1);
+}
 
 int Adress_not_list_elem(size_t num, List* list)
 {
