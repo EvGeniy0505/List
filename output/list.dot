@@ -1,0 +1,31 @@
+digraph LIST {
+	rankdir=LR;
+	bgcolor = "green:yellow";
+	node0 [shape=record, color=red, label=" NULL LIST ELEMENT | index=0 | data=POIZON | next=1 | prev=5 " ];
+	node0 -> node1;
+	node1 [shape=record, color=blue, label=" index=1 | data=1 | next=3 | prev=0 " ];
+	node1 -> node3;
+	node3 [shape=record, color=blue, label=" index=3 | data=10 | next=2 | prev=1 " ];
+	node3 -> node2;
+	node2 [shape=record, color=blue, label=" index=2 | data=2 | next=6 | prev=3 " ];
+	node2 -> node6;
+	node6 [shape=record, color=blue, label=" index=6 | data=52 | next=4 | prev=2 " ];
+	node6 -> node4;
+	node4 [shape=record, color=blue, label=" index=4 | data=4 | next=5 | prev=6 " ];
+	node4 -> node5;
+	node5 [shape=record, color=blue, label=" index=5 | data=5 | next=0 | prev=4 " ];
+	subgraph cluster0 {
+		node [style=filled,color=white];
+		style=filled;
+		color=lightgrey;
+		node7 -> node8;
+		node7 [shape=record, color=white, label=" index=7 | data=POIZON | next=8 | prev=-1 " ];
+		node8 -> node9;
+		node8 [shape=record, color=white, label=" index=8 | data=POIZON | next=9 | prev=-1 " ];
+		node9 -> node0;
+		node9 [shape=record, color=white, label=" index=9 | data=POIZON | next=0 | prev=-1 " ];
+		label = "Empty fields";
+	}
+	node5 -> node0;
+	"free = 7";
+}

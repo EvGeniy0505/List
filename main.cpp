@@ -15,6 +15,8 @@ int main()
 
     Pop_elem(&list, 3);
 
+    Push_elem_before_num(&list, 10, 2);
+
     dump_to_dot(&list);
 
     D_tor(&list);

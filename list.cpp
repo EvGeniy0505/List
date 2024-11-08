@@ -37,7 +37,7 @@ void Fill_in(List* list)
     }
 
     list -> node[list -> size - 1].data = POIZON;
-    list -> node[list -> size - 1].next = list -> size;
+    list -> node[list -> size - 1].next =  0;
     list -> node[list -> size - 1].prev = -1;
 }
 
@@ -154,12 +154,13 @@ void dump(List* list)
 
 void dump_to_dot(List* list)
 {
-    FILE* f_dot = fopen("list.dot", "wr");
+    FILE* f_dot = fopen("output/list.dot", "wr");
 
-    fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n");
+    fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n");
 
-    fprintf(f_dot, "\tnode0 [shape=record, label=\" data=POIZON | next=%d | prev=%d \" ];\n", list -> node[0].next,
-                                                                                              list -> node[0].prev);
+    fprintf(f_dot, "\tnode0 [shape=record, color=red, label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
+                                                                                            list -> node[0].next,
+                                                                                            list -> node[0].prev);
     size_t i = 0;
 
     while(list -> node[i].next != 0)
@@ -168,10 +169,31 @@ void dump_to_dot(List* list)
 
         i = list -> node[i].next;
 
-        fprintf(f_dot, "\tnode%zu [shape=record, label=\" data=%d | next=%d | prev=%d \" ];\n", i, list -> node[i].data,
-                                                                                                   list -> node[i].next,
-                                                                                                   list -> node[i].prev);
+        fprintf(f_dot, "\tnode%zu [shape=record, color=blue, label=\" index=%d | data=%d | next=%d | prev=%d \" ];\n", i, i,
+                                                                                                    list -> node[i].data,
+                                                                                                    list -> node[i].next,
+                                                                                                    list -> node[i].prev);
     }
+
+    fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
+
+    for(size_t i = 0; i < list -> size; i++)
+    {
+        if(list -> node[i].prev == -1)
+        {
+            fprintf(f_dot, "\t\tnode%zu -> node%zu;\n", i, list -> node[i].next);
+
+            fprintf(f_dot, "\t\tnode%zu [shape=record, color=white, label=\" index=%d | data=POIZON | next=%d | prev=%d \" ];\n", i, i,
+                                                                                                    list -> node[i].next,
+                                                                                                    list -> node[i].prev);
+        }
+    }
+
+    fprintf(f_dot, "\t\tlabel = \"Empty fields\";\n\t}\n");
+
+    fprintf(f_dot, "\tnode%zu -> node0;\n", i);
+
+    fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
 
     fprintf(f_dot, "}");
 

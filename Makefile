@@ -13,7 +13,7 @@ list.o: list.cpp
 
 run:
 	./list
-	dot -Tpng list.dot > list.png
+	dot -Tpng output/list.dot > output/list.png
 
 clean:
 	rm *.o list *.d log_file.txt
