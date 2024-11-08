@@ -2,7 +2,6 @@
 
 typedef int list_elem;
 
-
 struct List_node
 {
     list_elem data;
@@ -34,9 +33,9 @@ void Fill_in(List* list);
 
 // Errors verificator();
 
-Errors Push_first_elem(List* list, list_elem new_elem);
+Errors Insert_first_elem(List* list, list_elem new_elem);
 
-Errors Push_last_elem(List* list, list_elem new_elem);
+Errors Insert_last_elem(List* list, list_elem new_elem);
 
 int Adress_not_list_elem(size_t num, List* list);
 
@@ -46,9 +45,19 @@ Errors Pop_elem(List* list, size_t num);
 
 void dump_to_dot(List* list);
 
-Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num);
+void Search_elem_by_val(List* list, unsigned int val);
 
-Errors Push_elem_before_num(List* list, list_elem new_elem, size_t num);
+int* Ptr_on_elem_after_num(List* list, size_t num);
+
+int* Ptr_on_elem_before_num(List* list, size_t num);
+
+int* Ptr_on_last_elem(List* list);
+
+int* Ptr_on_first_elem(List* list);
+
+Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num);
+
+Errors Insert_elem_before_num(List* list, list_elem new_elem, size_t num);
 
 void dump(List* list);
 

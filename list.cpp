@@ -29,10 +29,12 @@ List C_tor()
 
 void Fill_in(List* list)
 {
+    assert(list);
+
     for(size_t i = 1; i < list -> size - 1; i++)
     {
         list -> node[i].data = POIZON;
-        list -> node[i].next = i + 1;
+        list -> node[i].next = (int)i + 1;
         list -> node[i].prev = -1;
     }
 
@@ -42,7 +44,7 @@ void Fill_in(List* list)
 }
 
 
-Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num)
+Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
 {
     assert(list);
 
@@ -57,11 +59,11 @@ Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num)
 
     list -> node[new_elem_pos].next = list -> node[num].next;
 
-    list -> node[new_elem_pos].prev = num;
+    list -> node[new_elem_pos].prev = (list_elem)num;
 
-    list -> node[num].next = new_elem_pos;
+    list -> node[num].next = (list_elem)new_elem_pos;
 
-    list -> node[list -> node[new_elem_pos].next].prev = new_elem_pos;
+    list -> node[list -> node[new_elem_pos].next].prev = (list_elem)new_elem_pos;
 
     list -> free = next_free_val;
 
@@ -70,25 +72,79 @@ Errors Push_elem_after_num(List* list, list_elem new_elem, size_t num)
     return ALL_OKEY;
 }
 
-Errors Push_first_elem(List* list, list_elem new_elem)
+Errors Insert_first_elem(List* list, list_elem new_elem)
 {
-    Push_elem_after_num(list, new_elem, 0);
+    assert(list);
+
+    Insert_elem_after_num(list, new_elem, 0);
 
     return ALL_OKEY;
 }
 
-Errors Push_elem_before_num(List* list, list_elem new_elem, size_t num)
+Errors Insert_elem_before_num(List* list, list_elem new_elem, size_t num)
 {
-    Push_elem_after_num(list, new_elem, list -> node[num].prev);
+    assert(list);
+
+    Insert_elem_after_num(list, new_elem, list -> node[num].prev);
 
     return ALL_OKEY;
 }
 
-Errors Push_last_elem(List* list, list_elem new_elem)
+Errors Insert_last_elem(List* list, list_elem new_elem)
 {
-    Push_elem_before_num(list, new_elem, 0);
+    assert(list);
+
+    Insert_elem_before_num(list, new_elem, 0);
 
     return ALL_OKEY;
+}
+
+int* Ptr_on_elem_after_num(List* list, size_t num)
+{
+    assert(list);
+    return &(list -> node[num].next);
+}
+
+int* Ptr_on_elem_before_num(List* list, size_t num)
+{
+    assert(list);
+    return &(list -> node[num].prev);
+}
+
+int* Ptr_on_last_elem(List* list)
+{
+    assert(list);
+    return &(list -> node[0].prev);
+}
+
+
+int* Ptr_on_first_elem(List* list)
+{
+    assert(list);
+    return &(list -> node[0].next);
+}
+
+void Search_elem_by_val(List* list, unsigned int val)
+{
+    assert(list);
+
+    int flag = 0;
+    size_t num_elem = 1;
+    int i = list -> node[0].next;
+
+    while(list -> node[i].next != 0)
+    {
+        if(list -> node[i].data == val)
+        {
+            printf("Your element index: %d\nYour element num in turn: %zu\n", i, num_elem);
+            ++flag;
+        }
+        ++num_elem;
+        i = list -> node[i].next;
+    }
+
+    if(flag == 0)
+        printf("Your element is not in list\n");
 }
 
 Errors Pop_elem(List* list, size_t num)
@@ -104,7 +160,7 @@ Errors Pop_elem(List* list, size_t num)
 
     list -> node[list -> node[num].next].prev = list -> node[num].prev;
 
-    list -> node[num].next = list -> free;
+    list -> node[num].next = (list_elem)list -> free;
 
     list -> free = num;
 
@@ -115,52 +171,58 @@ Errors Pop_elem(List* list, size_t num)
     return ALL_OKEY;
 }
 
-
 void dump(List* list)
 {
-    FILE* f_dot = fopen("list.dot", "wr");
-
+    printf("-----------------LIST------------------\n");
     for(size_t i = 0; i < list -> tail; i++)
     {
         if(list -> node[i].data == POIZON)
-            fprintf(f_dot, "%d ", 0);
+            printf("    %d  ", 0);
         else
-            fprintf(f_dot, "node[%d ", list -> node[i].data);
+            printf("    %d  ", list -> node[i].data);
     }
 
-    putc('\n', f_dot);
+    putchar('\n');
 
     for(size_t i = 0; i < list -> tail; i++)
     {
-        fprintf(f_dot, "%d ", list -> node[i].next);
+        printf("    %d  ", list -> node[i].next);
     }
 
-    putc('\n', f_dot);
+    putchar('\n');
 
     for(size_t i = 0; i < list -> tail; i++)
     {
         if(list -> node[i].prev < 0)
-            fprintf(f_dot, "%d ", list -> node[i].prev);
+            printf("   %d  ", list -> node[i].prev);
         else
-            fprintf(f_dot, "%d ", list -> node[i].prev);
+            printf("    %d  ", list -> node[i].prev);
     }
 
-    putc('\n', f_dot);
+    putchar('\n');
 
-    // printf("head = %zu\ntail = %zu\nfree = %zu\n", list -> head, list -> tail, list -> free);
+    printf("head = %zu\ntail = %zu\nfree = %zu\n", list -> head, list -> tail, list -> free);
 
-    fclose(f_dot);
+    printf("-----------------LIST------------------\n\n\n");
 }
 
 void dump_to_dot(List* list)
 {
-    FILE* f_dot = fopen("output/list.dot", "wr");
+    FILE* f_dot = fopen("output/list.dot", "w");
+
+    assert(f_dot);
+    assert(list);
+    if(ferror(f_dot))
+        fprintf(stderr, "FILE OPEN ERROR!!!\n");
+
 
     fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n");
 
-    fprintf(f_dot, "\tnode0 [shape=record, color=red, label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
-                                                                                            list -> node[0].next,
-                                                                                            list -> node[0].prev);
+    fprintf(f_dot, "\tnode0 [shape=record, color=red,"
+                   "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n"
+                   "\tnode0-> node0[color=red];\n",
+                   list -> node[0].next, list -> node[0].prev);
+
     size_t i = 0;
 
     while(list -> node[i].next != 0)
@@ -169,23 +231,23 @@ void dump_to_dot(List* list)
 
         i = list -> node[i].next;
 
-        fprintf(f_dot, "\tnode%zu [shape=record, color=blue, label=\" index=%d | data=%d | next=%d | prev=%d \" ];\n", i, i,
-                                                                                                    list -> node[i].data,
-                                                                                                    list -> node[i].next,
-                                                                                                    list -> node[i].prev);
+        fprintf(f_dot, "\tnode%zu [shape=record, color=blue,"
+                       "label=\" index=%d | data=%d | next=%d | prev=%d \" ];\n",
+                       i, i, list -> node[i].data, list -> node[i].next, list -> node[i].prev);
     }
 
-    fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
+    fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n"
+                   "\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
 
     for(size_t i = 0; i < list -> size; i++)
     {
         if(list -> node[i].prev == -1)
         {
-            fprintf(f_dot, "\t\tnode%zu -> node%zu;\n", i, list -> node[i].next);
+            fprintf(f_dot, "\t\tnode%zu -> node%d;\n", i, list -> node[i].next);
 
-            fprintf(f_dot, "\t\tnode%zu [shape=record, color=white, label=\" index=%d | data=POIZON | next=%d | prev=%d \" ];\n", i, i,
-                                                                                                    list -> node[i].next,
-                                                                                                    list -> node[i].prev);
+            fprintf(f_dot, "\t\tnode%zu [shape=record, color=white,"
+                           "label=\" index=%zu | data=POIZON | next=%d | prev=%d \" ];\n",
+                           i, i, list -> node[i].next, list -> node[i].prev);
         }
     }
 
@@ -202,8 +264,10 @@ void dump_to_dot(List* list)
 
 int Adress_not_list_elem(size_t num, List* list)
 {
-    if(list -> size < num && list -> node[num].prev != -1)
-        printf("\n\nABOBUS ERROR YOU HAVE NOT %d ELEMENT!!!\n\n\n", num);
+    assert(list);
+
+    if(list -> size < num || list -> node[num].prev != -1)
+        printf("\n\nABOBUS ERROR YOU HAVE NOT %zu ELEMENT!!!\n\n\n", num);
         return 0;
     return 1;
 }
