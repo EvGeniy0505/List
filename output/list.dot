@@ -9,6 +9,7 @@ digraph LIST4 {
 		node8 [shape=record, color=white,label=" index=8 | data=POIZON | next=9 | prev=-1 " ];
 		node8 -> node9;
 		node9 [shape=record, color=white,label=" index=9 | data=POIZON | next=0 | prev=-1 " ];
+		fontsize=18;
 		label = "Empty fields";
 	}
 	node0 [shape=record, color=red,label=" NULL LIST ELEMENT | index=0 | data=POIZON | next=7 | prev=5 " ];
@@ -27,5 +28,9 @@ digraph LIST4 {
 	node4 -> node5;
 	node5 [shape=record, color=blue,label=" index=5 | data=5 | next=0 | prev=4 " ];
 	node5 -> node0;
+	label="LIST BY Evgeniy Rogov";
+	fontsize=30;
+	fontname="Times-Roman";
+	labelloc="t";
 }
 

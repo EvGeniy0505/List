@@ -29,7 +29,9 @@ int main()
 
     Search_elem_by_val(&list, 52);
 
-    printf("Ptr on first elem: %p\n", Ptr_on_first_elem);
+    printf("Ptr on first elem: %p\n", Ptr_on_first_elem(&list));
+
+    printf("Ptr on second elem: %p\n", Ptr_on_elem_after_num(&list, 1));
 
     D_tor(&list);
 

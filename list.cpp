@@ -152,7 +152,7 @@ Errors Pop_elem(List* list, size_t num)
 {
     assert(list);
 
-    // if(Adress_not_list_elem(num, list) || Pop_null_elem(num))
+    // if(Pop_null_elem(num))
     //     return NOT_OKEY;
 
     list -> node[num].data = POIZON;
@@ -171,6 +171,8 @@ Errors Pop_elem(List* list, size_t num)
 
     return ALL_OKEY;
 }
+
+
 
 void dump(List* list)
 {
@@ -216,7 +218,6 @@ void dump_to_dot(List* list, int num_graph)
     if(ferror(f_dot))
         fprintf(stderr, "FILE OPEN ERROR!!!\n");
 
-
     fprintf(f_dot, "digraph LIST%d {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n", num_graph);
 
     fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
@@ -243,8 +244,7 @@ void dump_to_dot(List* list, int num_graph)
 
     }
 
-    fprintf(f_dot, "\t\tlabel = \"Empty fields\";\n\t}\n");
-
+    fprintf(f_dot, "\t\tfontsize=18;\n\t\tlabel = \"Empty fields\";\n\t}\n");
 
     fprintf(f_dot, "\tnode0 [shape=record, color=red,"
                    "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
@@ -265,6 +265,8 @@ void dump_to_dot(List* list, int num_graph)
 
     fprintf(f_dot, "\tnode%zu -> node0;\n", i);
 
+    fprintf(f_dot, "\tlabel=\"LIST BY Evgeniy Rogov\";\n\tfontsize=30;\n\tfontname=\"Times-Roman\";\n\tlabelloc=\"t\";\n");
+
     fprintf(f_dot, "}\n\n");
 
     fclose(f_dot);
@@ -274,16 +276,18 @@ void dump_to_dot(List* list, int num_graph)
 
 void Dot_file_compile(int num_pucture)
 {
-    char com1[100] = "dot -Tpng output/list.dot > output/list";
+    char com1[40] = "dot -Tpng output/list.dot > output/list";
     char com2[5]  = ".png";
+
+    char com[47] = "";
 
     char num_str[3] = "";
 
     snprintf(num_str, sizeof(num_str), "%d", num_pucture);
 
-    snprintf(com1, sizeof(com1), "%s%s%s", com1, num_str, com2);
+    sprintf(com, "%s%s%s", com1, num_str, com2);
 
-    system(com1);
+    system(com);
 }
 
 int Adress_not_list_elem(size_t num, List* list)
