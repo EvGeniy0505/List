@@ -13,11 +13,15 @@ int main()
 
     Insert_elem_after_num(&list, 52, 3);
 
+    // dump_to_dot(&list);
+
     Pop_elem(&list, 3);
+
+    // dump_to_dot(&list);
 
     Insert_elem_before_num(&list, 10, 2);
 
-    dump_to_dot(&list);
+    // dump_to_dot(&list);
 
     Insert_first_elem(&list, 3);
 

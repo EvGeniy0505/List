@@ -45,7 +45,7 @@ Errors Pop_elem(List* list, size_t num);
 
 void dump_to_dot(List* list);
 
-void Search_elem_by_val(List* list, unsigned int val);
+void Search_elem_by_val(List* list, list_elem val);
 
 int* Ptr_on_elem_after_num(List* list, size_t num);
 

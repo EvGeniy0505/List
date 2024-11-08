@@ -48,8 +48,8 @@ Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
 {
     assert(list);
 
-    if(Adress_not_list_elem(num, list))
-        return NOT_OKEY;
+    // if(Adress_not_list_elem(num, list))
+    //     return NOT_OKEY;
 
     size_t new_elem_pos = list -> free;
 
@@ -124,7 +124,7 @@ int* Ptr_on_first_elem(List* list)
     return &(list -> node[0].next);
 }
 
-void Search_elem_by_val(List* list, unsigned int val)
+void Search_elem_by_val(List* list, list_elem val)
 {
     assert(list);
 
@@ -151,8 +151,8 @@ Errors Pop_elem(List* list, size_t num)
 {
     assert(list);
 
-    if(Adress_not_list_elem(num, list) || Pop_null_elem(num))
-        return NOT_OKEY;
+    // if(Adress_not_list_elem(num, list) || Pop_null_elem(num))
+    //     return NOT_OKEY;
 
     list -> node[num].data = POIZON;
 
@@ -176,7 +176,7 @@ void dump(List* list)
     printf("-----------------LIST------------------\n");
     for(size_t i = 0; i < list -> tail; i++)
     {
-        if(list -> node[i].data == POIZON)
+        if(list -> node[i].data == (int)POIZON)
             printf("    %d  ", 0);
         else
             printf("    %d  ", list -> node[i].data);
@@ -219,41 +219,47 @@ void dump_to_dot(List* list)
     fprintf(f_dot, "digraph LIST {\n\trankdir=LR;\n\tbgcolor = \"green:yellow\";\n");
 
     fprintf(f_dot, "\tnode0 [shape=record, color=red,"
-                   "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n"
-                   "\tnode0-> node0[color=red];\n",
+                   "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
                    list -> node[0].next, list -> node[0].prev);
 
     size_t i = 0;
 
     while(list -> node[i].next != 0)
     {
-        fprintf(f_dot, "\tnode%zu -> node%zu;\n", i, list -> node[i].next);
+        fprintf(f_dot, "\tnode%zu -> node%d;\n", i, list -> node[i].next);
 
         i = list -> node[i].next;
 
         fprintf(f_dot, "\tnode%zu [shape=record, color=blue,"
-                       "label=\" index=%d | data=%d | next=%d | prev=%d \" ];\n",
+                       "label=\" index=%zu | data=%d | next=%d | prev=%d \" ];\n",
                        i, i, list -> node[i].data, list -> node[i].next, list -> node[i].prev);
     }
+
+    fprintf(f_dot, "\tnode%zu -> node0;\n", i);
 
     fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n"
                    "\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
 
-    for(size_t i = 0; i < list -> size; i++)
+    for(i = 0; i < list -> size; i++)
     {
-        if(list -> node[i].prev == -1)
+        if(list -> node[i].prev == -1 && list -> node[i].next == 0)
         {
-            fprintf(f_dot, "\t\tnode%zu -> node%d;\n", i, list -> node[i].next);
-
             fprintf(f_dot, "\t\tnode%zu [shape=record, color=white,"
                            "label=\" index=%zu | data=POIZON | next=%d | prev=%d \" ];\n",
                            i, i, list -> node[i].next, list -> node[i].prev);
         }
+        else if(list -> node[i].prev == -1)
+        {
+            fprintf(f_dot, "\t\tnode%zu [shape=record, color=white,"
+                           "label=\" index=%zu | data=POIZON | next=%d | prev=%d \" ];\n",
+                           i, i, list -> node[i].next, list -> node[i].prev);
+
+            fprintf(f_dot, "\t\tnode%zu -> node%d;\n", i, list -> node[i].next);
+        }
+
     }
 
     fprintf(f_dot, "\t\tlabel = \"Empty fields\";\n\t}\n");
-
-    fprintf(f_dot, "\tnode%zu -> node0;\n", i);
 
     fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
 
@@ -266,17 +272,21 @@ int Adress_not_list_elem(size_t num, List* list)
 {
     assert(list);
 
-    if(list -> size < num || list -> node[num].prev != -1)
+    if(list -> size < num && list -> node[num].prev != -1)
+    {
         printf("\n\nABOBUS ERROR YOU HAVE NOT %zu ELEMENT!!!\n\n\n", num);
         return 0;
+    }
     return 1;
 }
 
 int Pop_null_elem(size_t num)
 {
     if(num == 0)
+    {
         printf("\n\nABOBUS ERROR DO NOT TOUCH NULL ELEMENT!!!\n\n\n");
         return 0;
+    }
     return 1;
 }
 
