@@ -4,8 +4,9 @@
 
 #include "list.h"
 
-#define SIZE_LIST 10
-#define POIZON    0xDEDAB0BA
+#define SIZE_LIST           10
+#define POIZON              0xDEDAB0BA
+#define CONST_SIZE_INCREASE 2
 
 List C_tor()
 {
@@ -44,6 +45,40 @@ void Fill_in(List* list)
     list -> node[list -> size - 1].prev = -1;
 }
 
+Errors Realloc_size_up(List* list)
+{
+    if(list -> size <= list -> tail)
+    {
+        size_t new_size = 0;
+        List new_list = {};
+
+        new_size = list -> size * CONST_SIZE_INCREASE;
+
+        new_list.node = (List_node*) realloc(list -> node, new_size * sizeof(*new_list.node));
+
+        if(new_list.node == NULL)
+        {
+           printf("Realloc error\n");
+           return REALLOC_ERROR;
+        }
+
+        list -> size = new_size;
+        list -> node = new_list.node;
+
+        for(size_t i = list -> tail; i < list -> size; i++)
+        {
+            list -> node[i].data = POIZON;
+            list -> node[i].prev = -1;
+            list -> node[i].next = (int)(i + 1);
+        }
+
+        list -> node[list -> size - 1].next = 0;
+
+        list -> free = list -> tail;
+    }
+
+    return ALL_OKEY;
+}
 
 Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
 {
@@ -69,6 +104,8 @@ Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
     list -> free = next_free_val;
 
     ++list -> tail;
+
+    Realloc_size_up(list);
 
     return ALL_OKEY;
 }
@@ -223,7 +260,7 @@ void dump_to_dot(List* list, int num_graph)
     fprintf(f_dot, "\t\"free = %zu\";\n", list -> free);
 
     fprintf(f_dot, "\tsubgraph cluster0 {\n\t\tnode [style=filled,color=white];\n"
-                   "\t\tstyle=filled;\n\t\tcolor=lightgrey;\n");
+                   "\t\tstyle=filled;\n\t\tcolor=lightblue;\n");
 
     for(size_t i = 0; i < list -> size; i++)
     {
@@ -246,7 +283,7 @@ void dump_to_dot(List* list, int num_graph)
 
     fprintf(f_dot, "\t\tfontsize=18;\n\t\tlabel = \"Empty fields\";\n\t}\n");
 
-    fprintf(f_dot, "\tnode0 [shape=record, color=red,"
+    fprintf(f_dot, "\tnode0 [fillcolor=white, style=filled, shape=record, color=red,"
                    "label=\" NULL LIST ELEMENT | index=0 | data=POIZON | next=%d | prev=%d \" ];\n",
                    list -> node[0].next, list -> node[0].prev);
 
@@ -258,7 +295,7 @@ void dump_to_dot(List* list, int num_graph)
 
         i = list -> node[i].next;
 
-        fprintf(f_dot, "\tnode%zu [shape=record, color=blue,"
+        fprintf(f_dot, "\tnode%zu [fillcolor=white, style=filled, shape=record, color=blue,"
                        "label=\" index=%zu | data=%d | next=%d | prev=%d \" ];\n",
                        i, i, list -> node[i].data, list -> node[i].next, list -> node[i].prev);
     }

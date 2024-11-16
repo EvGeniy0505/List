@@ -25,7 +25,20 @@ int main()
 
     Insert_first_elem(&list, 3);
 
+    Insert_last_elem(&list, 1);
+    Insert_last_elem(&list, 1);
+
     dump_to_dot(&list, 4);
+
+    printf("list tail = %zu\n", list.tail);
+    printf("list size = %zu\n", list.size);
+
+    Insert_last_elem(&list, 1);
+    Insert_last_elem(&list, 1);
+    Insert_last_elem(&list, 1);
+    Insert_last_elem(&list, 1);
+
+    dump_to_dot(&list, 5);
 
     Search_elem_by_val(&list, 52);
 

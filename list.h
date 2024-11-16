@@ -5,8 +5,8 @@ typedef int list_elem;
 struct List_node
 {
     list_elem data;
-    int next;
-    int prev;
+    int       next;
+    int       prev;
 };
 
 struct List
@@ -22,6 +22,7 @@ enum Errors
 {
     ALL_OKEY,
     CHANGE_NULL_ELEM,
+    REALLOC_ERROR,
     NOT_OKEY,
 };
 
@@ -32,6 +33,8 @@ void D_tor(List* list);
 void Fill_in(List* list);
 
 // Errors verificator();
+
+Errors Realloc_size_up(List* list);
 
 Errors Insert_first_elem(List* list, list_elem new_elem);
 
