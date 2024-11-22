@@ -32,6 +32,7 @@ void D_tor(List* list);
 
 void Fill_in(List* list);
 
+// TODO: верификатор)))
 // Errors verificator();
 
 Errors Realloc_size_up(List* list);

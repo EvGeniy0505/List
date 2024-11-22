@@ -4,22 +4,28 @@
 
 #include "list.h"
 
+// HACK: лучше static const, но ты должен будешь сказать, почему
 #define SIZE_LIST           10
 #define POIZON              0xDEDAB0BA
 #define CONST_SIZE_INCREASE 2
 
+// HACK: обычно у функций дописывают, для чего конкретно они.
+// типа List_ctor, List_push etc
 List C_tor()
 {
+    // Сигма!
     List list = {};
 
     list.size = SIZE_LIST;
 
+    // FIX: а если не закалочило?
     list.node = (List_node*) calloc(SIZE_LIST, sizeof(*list.node));
 
     list.node[0].data = POIZON;
     list.node[0].next = 0;
     list.node[0].prev = 0;
 
+    // WARNING: а почему фиктивный элемент не нулевой? Ты же целый элемент теряешь
     list.head = 1;
     list.tail = 1;
     list.free = 1;
@@ -47,9 +53,11 @@ void Fill_in(List* list)
 
 Errors Realloc_size_up(List* list)
 {
+    // FIX: на 40 строке так обрадовал, а тут...
     if(list -> size <= list -> tail)
     {
         size_t new_size = 0;
+        // Ебать ты базу выдал
         List new_list = {};
 
         new_size = list -> size * CONST_SIZE_INCREASE;
@@ -84,7 +92,7 @@ Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
 {
     assert(list);
 
-    // if(Adress_not_list_elem(num, list))
+    // TODO: if(Adress_not_list_elem(num, list))
     //     return NOT_OKEY;
 
     size_t new_elem_pos = list -> free;
@@ -95,14 +103,18 @@ Errors Insert_elem_after_num(List* list, list_elem new_elem, size_t num)
 
     list -> node[new_elem_pos].next = list -> node[num].next;
 
+    // WARNING:                       vvvvvvvvvvv чё это?
     list -> node[new_elem_pos].prev = (list_elem)num;
 
+    // WARNING:              vvvvvvvvvvv чё это?
     list -> node[num].next = (list_elem)new_elem_pos;
 
+    // WARNING:                                          vvvvvvvvvvv чё это?
     list -> node[list -> node[new_elem_pos].next].prev = (list_elem)new_elem_pos;
 
     list -> free = next_free_val;
 
+    // FIX: а вот это нихуя не правда
     ++list -> tail;
 
     Realloc_size_up(list);
@@ -174,6 +186,7 @@ void Search_elem_by_val(List* list, list_elem val)
     {
         if(list -> node[i].data == val)
         {
+            // HACK: из этой функции лучше индекс возвращать, а не принтить
             printf("Your element index: %d\nYour element num in turn: %zu\n", i, num_elem);
             ++flag;
         }
@@ -213,6 +226,7 @@ Errors Pop_elem(List* list, size_t num)
 
 void dump(List* list)
 {
+    // TODO: хочу ещё в файлы дампить
     printf("-----------------LIST------------------\n");
     for(size_t i = 0; i < list -> tail; i++)
     {
@@ -313,9 +327,11 @@ void dump_to_dot(List* list, int num_graph)
 
 void Dot_file_compile(int num_pucture)
 {
+    // HACK:  vv необязательно писать, когда ты сразу приравниваешь, оно само размер вычисляет
     char com1[40] = "dot -Tpng output/list.dot > output/list";
     char com2[5]  = ".png";
 
+    // WARNING: лучше размеры с запасом брать, типа 3 байта переполнить, как пальцы обоссать
     char com[47] = "";
 
     char num_str[3] = "";
