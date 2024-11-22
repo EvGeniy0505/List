@@ -4,22 +4,28 @@
 
 #include "list.h"
 
+// HACK: лучше static const, но ты должен будешь сказать, почему
 #define SIZE_LIST           10
 #define POIZON              0xDEDAB0BA
 #define CONST_SIZE_INCREASE 2
 
+// HACK: обычно у функций дописывают, для чего конкретно они.
+// типа List_ctor, List_push etc
 List C_tor()
 {
+    // Сигма!
     List list = {};
 
     list.size = SIZE_LIST;
 
+    // FIX: а если не закалочило?
     list.node = (List_node*) calloc(SIZE_LIST, sizeof(*list.node));
 
     list.node[0].data = POIZON;
     list.node[0].next = 0;
     list.node[0].prev = 0;
 
+    // WARNING: а почему фиктивный элемент не нулевой? Ты же целый элемент теряешь
     list.head = 1;
     list.tail = 1;
     list.free = 1;
@@ -47,9 +53,11 @@ void Fill_in(List* list)
 
 Errors Realloc_size_up(List* list)
 {
+    // FIX: на 40 строке так обрадовал, а тут...
     if(list -> size <= list -> tail)
     {
         size_t new_size = 0;
+        // Ебать ты базу выдал
         List new_list = {};
 
         new_size = list -> size * CONST_SIZE_INCREASE;
