@@ -209,8 +209,6 @@ Errors Pop_elem(List* list, size_t num)
     return ALL_OKEY;
 }
 
-
-
 void dump(List* list)
 {
     printf("-----------------LIST------------------\n");
