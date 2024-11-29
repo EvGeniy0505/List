@@ -4,29 +4,26 @@
 
 #include "list.h"
 
-// HACK: лучше static const, но ты должен будешь сказать, почему
-#define SIZE_LIST           10
-#define POIZON              0xDEDAB0BA
-#define CONST_SIZE_INCREASE 2
+static const size_t SIZE_LIST           = 10;
+static const int    POIZON              = 0xDEDAB0BA;
+static const int    CONST_SIZE_INCREASE = 2;
 
-// HACK: обычно у функций дописывают, для чего конкретно они.
-// типа List_ctor, List_push etc
-List C_tor()
+List List_ctor()
 {
     // Сигма!
     List list = {};
 
     list.size = SIZE_LIST;
 
-    // FIX: а если не закалочило?
     list.node = (List_node*) calloc(SIZE_LIST, sizeof(*list.node));
+
+    if(list.node == NULL)
+        fprintf(stderr, "REALLOC ERROR!!!\n");
 
     list.node[0].data = POIZON;
     list.node[0].next = 0;
     list.node[0].prev = 0;
 
-    // WARNING: а почему фиктивный элемент не нулевой? Ты же целый элемент теряешь
-    list.head = 1;
     list.tail = 1;
     list.free = 1;
 
@@ -53,7 +50,8 @@ void Fill_in(List* list)
 
 Errors Realloc_size_up(List* list)
 {
-    // FIX: на 40 строке так обрадовал, а тут...
+    assert(list);
+
     if(list -> size <= list -> tail)
     {
         size_t new_size = 0;
@@ -217,8 +215,6 @@ Errors Pop_elem(List* list, size_t num)
     return ALL_OKEY;
 }
 
-
-
 void dump(List* list)
 {
     printf("-----------------LIST------------------\n");
@@ -357,7 +353,7 @@ int Pop_null_elem(size_t num)
     return 1;
 }
 
-void D_tor(List* list)
+void List_dtor(List* list)
 {
     list -> free = POIZON;
     list -> head = POIZON;
