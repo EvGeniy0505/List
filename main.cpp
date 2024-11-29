@@ -4,7 +4,7 @@
 
 int main()
 {
-    List list = C_tor();
+    List list = List_ctor();
 
     for(size_t i = 0; i < 5; i++)
     {
@@ -46,7 +46,7 @@ int main()
 
     printf("Ptr on second elem: %p\n", Ptr_on_elem_after_num(&list, 1));
 
-    D_tor(&list);
+    List_dtor(&list);
 
     return 0;
 }

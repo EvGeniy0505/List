@@ -26,13 +26,11 @@ enum Errors
     NOT_OKEY,
 };
 
-List C_tor();
+List List_ctor();
 
-void D_tor(List* list);
+void List_dtor(List* list);
 
 void Fill_in(List* list);
-
-// Errors verificator();
 
 Errors Realloc_size_up(List* list);
 

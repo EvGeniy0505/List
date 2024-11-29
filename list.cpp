@@ -4,23 +4,26 @@
 
 #include "list.h"
 
-#define SIZE_LIST           10
-#define POIZON              0xDEDAB0BA
-#define CONST_SIZE_INCREASE 2
+static const size_t SIZE_LIST           = 10;
+static const int    POIZON              = 0xDEDAB0BA;
+static const int    CONST_SIZE_INCREASE = 2;
 
-List C_tor()
+List List_ctor()
 {
+    // Сигма!
     List list = {};
 
     list.size = SIZE_LIST;
 
     list.node = (List_node*) calloc(SIZE_LIST, sizeof(*list.node));
 
+    if(list.node == NULL)
+        fprintf(stderr, "REALLOC ERROR!!!\n");
+
     list.node[0].data = POIZON;
     list.node[0].next = 0;
     list.node[0].prev = 0;
 
-    list.head = 1;
     list.tail = 1;
     list.free = 1;
 
@@ -47,9 +50,12 @@ void Fill_in(List* list)
 
 Errors Realloc_size_up(List* list)
 {
+    assert(list);
+
     if(list -> size <= list -> tail)
     {
         size_t new_size = 0;
+        // Ебать ты базу выдал
         List new_list = {};
 
         new_size = list -> size * CONST_SIZE_INCREASE;
@@ -347,7 +353,7 @@ int Pop_null_elem(size_t num)
     return 1;
 }
 
-void D_tor(List* list)
+void List_dtor(List* list)
 {
     list -> free = POIZON;
     list -> head = POIZON;
